@@ -1,6 +1,9 @@
 name: Build Kivy APK
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,40 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
         with:
-          python-version: '3.11'
+          workdir: .
+          buildozer_version: stable
+          command: buildozer android debug
       
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-      
-      - name: Install Python dependencies
-        run: |
-          pip install --upgrade pip
-          pip install buildozer cython
-      
-      - name: Create buildozer.spec (if not exists)
-        run: |
-          if [ ! -f buildozer.spec ]; then
-            buildozer init
-          fi
-      
-      - name: Accept Android SDK licenses
-        run: |
-          mkdir -p ~/.android
-          echo -e "count=1\n"
-          echo -e "user_agreement_accepted=1\n" > ~/.android/repositories.cfg
-          yes | $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
-      
-      - name: Build APK with Buildozer
-        run: |
-          rm -rf ~/.buildozer
-          buildozer android debug
-      
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: kivy-apk
