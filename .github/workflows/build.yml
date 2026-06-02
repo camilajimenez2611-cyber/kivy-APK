@@ -1,72 +1,25 @@
 name: Build Kivy APK
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # ← Usa Ubuntu 22.04 (más estable)
+    runs-on: ubuntu-latest
+    container: kivy/buildozer:latest  # ← Usa la imagen oficial de Kivy
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: Install system dependencies (with retry)
+      - name: Build APK
         run: |
-          # Función para reintentar comandos
-          function retry {
-            local n=1
-            local max=5
-            local delay=10
-            while true; do
-              "$@" && break || {
-                if [[ $n -lt $max ]]; then
-                  echo "Comando falló. Reintentando en $delay segundos... (Intento $n/$max)"
-                  sleep $delay
-                  ((n++))
-                else
-                  echo "El comando falló después de $n intentos."
-                  return 1
-                fi
-              }
-            done
-          }
-          
-          # Actualizar lista de paquetes CON REINTENTOS
-          retry sudo apt-get update -y
-          
-          # Instalar dependencias CON REINTENTOS
-          retry sudo apt-get install -y \
-            git zip unzip \
-            openjdk-17-jdk \
-            python3-pip \
-            autoconf libtool pkg-config \
-            zlib1g-dev libncurses5-dev \
-            libncursesw5-dev libtinfo5 \
-            cmake libffi-dev libssl-dev
+          # Aceptar licencias automáticamente
+          yes y | buildozer android debug
       
-      - name: Install Python dependencies
-        run: |
-          pip install --upgrade pip
-          pip install buildozer cython
-      
-      - name: Create buildozer.spec (if not exists)
-        run: |
-          if [ ! -f buildozer.spec ]; then
-            buildozer init
-          fi
-      
-      - name: Build APK with Buildozer
-        run: |
-          # Limpiar cache y construir
-          rm -rf ~/.buildozer
-          buildozer android debug
-      
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: kivy-apk
