@@ -1,0 +1,138 @@
+#:kivy 2.3.1
+
+WindowManager:
+
+    LoginScreen:
+    RegistroScreen:
+
+
+<LoginScreen>:
+
+    name: "login"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 60
+        spacing: 25
+
+        canvas.before:
+
+            Color:
+                rgba: 0.98, 0.98, 0.98, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+            Color:
+                rgba: 1, 1, 1, 0.25
+            Rectangle:
+                source: "logo_ujat.png"
+                size: 500, 500
+                pos:
+                    self.center_x - 250, self.center_y - 250
+
+        Label:
+            text: "INICIO DE SESIÓN"
+            font_size: "40sp"
+            bold: True
+            color: 0.0, 0.38, 0.20, 1
+
+        TextInput:
+            id: matricula_input
+            hint_text: "Matrícula del profesor"
+            multiline: False
+            size_hint_y: None
+            height: 50
+
+        Button:
+            text: "Ingresar"
+            size_hint_y: None
+            height: 55
+            background_color: 0.0, 0.45, 0.25, 1
+            color: 1,1,1,1
+            on_press:
+                root.validar_usuario()
+
+        Label:
+            id: mensaje
+            color: 0.7, 0.2, 0.2, 1
+
+
+<RegistroScreen>:
+
+    name: "registro"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 35
+        spacing: 20
+
+        canvas.before:
+
+            Color:
+                rgba: 0.98, 0.98, 0.98, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+            Color:
+                rgba: 1, 1, 1, 0.25
+            Rectangle:
+                source: "logo_ujat.png"
+                size: 500, 500
+                pos:
+                    self.center_x - 250, self.center_y - 250
+
+        Label:
+            text: "REGISTRO DE ASISTENCIA"
+            font_size: "40sp"
+            bold: True
+            color: 0.0, 0.38, 0.20, 1
+
+        Label:
+            id: bienvenida_label
+            text: "Bienvenido"
+            font_size: "22sp"
+            color: 0.0, 0.38, 0.20, 1
+
+        Spinner:
+            id: dia_spinner
+            text: "Selecciona un día"
+            size_hint_y: None
+            height: 50
+            values: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+
+        Button:
+            text: "Registrar Entrada"
+            size_hint_y: None
+            height: 55
+            background_color: 0.0, 0.45, 0.25, 1
+            color: 1,1,1,1
+            on_press:
+                root.registrar_entrada()
+
+        Button:
+            text: "Registrar Salida"
+            size_hint_y: None
+            height: 55
+            background_color: 0.85, 0.68, 0.15, 1
+            color: 0,0,0,1
+            on_press:
+                root.registrar_salida()
+
+        Label:
+            text: root.registro
+            font_size: "18sp"
+            text_size: self.width - 40, None
+            halign: "center"
+            color: 0.2, 0.2, 0.2, 1
+
+        Button:
+            text: "Cerrar sesión"
+            size_hint_y: None
+            height: 55
+            background_color: 0.7, 0.2, 0.2, 1
+            color: 1,1,1,1
+            on_press:
+                app.root.profesor_actual = None
+                app.root.current = "login"
