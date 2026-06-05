@@ -1,18 +1,27 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
+from kivy.lang import Builder
 from datetime import datetime
 import sqlite3
 
-# ---------------- BASE DE DATOS ----------------
 
+# ---------------- BASE DE DATOS ----------------
 conexion = sqlite3.connect("ujat_horarios.db")
 cursor = conexion.cursor()
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS profesores (
+CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    matricula TEXT UNIQUE,
+    usuario TEXT UNIQUE,
+    nombre TEXT
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS administradores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_id TEXT UNIQUE,
     nombre TEXT
 )
 """)
@@ -20,9 +29,8 @@ CREATE TABLE IF NOT EXISTS profesores (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS registros (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    profesor_id INTEGER,
+    profesor_id TEXT,
     profesor_nombre TEXT,
-    fecha TEXT,
     dia TEXT,
     hora_entrada TEXT,
     hora_salida TEXT
@@ -31,114 +39,183 @@ CREATE TABLE IF NOT EXISTS registros (
 
 conexion.commit()
 
-# Profesores de ejemplo
-profesores = [
-    ("E4C56G789", "Juan Pérez"),
+
+# ---------------- DATOS ----------------
+usuarios = [
+    ("E4C56G789", "Carlos Pérez"),
     ("A2C78F546", "María López"),
-    ("M6E56M098", "Carlos Ramírez")
+    ("M6E56M098", "Juan Hernández")
 ]
 
-for matricula, nombre in profesores:
-    cursor.execute("""
-    INSERT OR IGNORE INTO profesores (matricula, nombre)
-    VALUES (?, ?)
-    """, (matricula, nombre))
+cursor.execute("""
+INSERT OR IGNORE INTO administradores (admin_id, nombre)
+VALUES (?, ?)
+""", ("ADMIN001", "Administrador"))
 
 conexion.commit()
 
+for u in usuarios:
+    cursor.execute("""
+    INSERT OR IGNORE INTO usuarios (usuario, nombre)
+    VALUES (?, ?)
+    """, u)
+
+conexion.commit()
+
+
 # ---------------- PANTALLAS ----------------
+
+class InicioScreen(Screen):
+    pass
+
+
+class LoginAdminScreen(Screen):
+
+    def validar_admin(self):
+        admin_id = self.ids.admin_input.text.strip()
+
+        cursor.execute("SELECT nombre FROM administradores WHERE admin_id=?", (admin_id,))
+        r = cursor.fetchone()
+
+        if r:
+            self.manager.current = "menu_admin"
+        else:
+            self.ids.admin_input.text = ""
+
 
 class LoginScreen(Screen):
 
     def validar_usuario(self):
+        profesor_id = self.ids.id_input.text.strip()
 
-        matricula = self.ids.matricula_input.text.strip()
+        cursor.execute("SELECT nombre FROM usuarios WHERE usuario=?", (profesor_id,))
+        r = cursor.fetchone()
 
-        cursor.execute("""
-        SELECT id, nombre FROM profesores
-        WHERE matricula = ?
-        """, (matricula,))
+        if r:
+            self.manager.profesor_actual = {"id": profesor_id, "nombre": r[0]}
+            self.manager.current = "menu"
+        else:
+            self.ids.id_input.text = ""
 
-        resultado = cursor.fetchone()
 
-        if resultado:
-            self.manager.profesor_actual = resultado
-
-            # actualizar label cuando entre
-            self.manager.get_screen("registro").ids.bienvenida_label.text = \
-                f"Bienvenido: {resultado[1]}"
-
-            self.manager.current = "registro"
+class MenuScreen(Screen):
+    pass
 
 
 class RegistroScreen(Screen):
-
     registro = StringProperty("")
 
-    def registrar_entrada(self):
+    def get_profesor(self):
+        return self.manager.profesor_actual
 
-        profesor = self.manager.profesor_actual
+    def registrar_entrada(self):
+        profesor = self.get_profesor()
+        dia = self.ids.dia_spinner.text
+        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         if not profesor:
-            self.registro = "No hay sesión activa"
-            return
-
-        profesor_id, nombre = profesor
-
-        fecha = datetime.now().strftime("%Y-%m-%d")
-        hora = datetime.now().strftime("%H:%M:%S")
-        dia = self.ids.dia_spinner.text
-
-        if dia == "Selecciona un día":
-            self.registro = "Selecciona un día válido"
+            self.registro = "Sin sesión"
             return
 
         cursor.execute("""
-        INSERT INTO registros
-        (profesor_id, profesor_nombre, fecha, dia, hora_entrada, hora_salida)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """, (profesor_id, nombre, fecha, dia, hora, "Pendiente"))
+        SELECT 1 FROM registros
+        WHERE profesor_id=? AND dia=? AND hora_salida='Pendiente'
+        """, (profesor["id"], dia))
+
+        if cursor.fetchone():
+            self.registro = "Ya registrado"
+            return
+
+        cursor.execute("""
+        INSERT INTO registros VALUES (NULL,?,?,?,?,?)
+        """, (profesor["id"], profesor["nombre"], dia, fecha, "Pendiente"))
 
         conexion.commit()
+        self.registro = "Entrada registrada"
 
-        self.registro = (
-            f"Registro de entrada completado\n"
-            f"Profesor: {nombre}\n"
-            f"Fecha: {fecha}\n"
-            f"Hora de entrada: {hora}"
-)
-        
 
     def registrar_salida(self):
-
-        profesor = self.manager.profesor_actual
-
-        if not profesor:
-            self.registro = "No hay sesión activa"
-            return
-
-        profesor_id, nombre = profesor
-
-        fecha = datetime.now().strftime("%Y-%m-%d")
-        hora = datetime.now().strftime("%H:%M:%S")
+        profesor = self.get_profesor()
+        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         cursor.execute("""
-        UPDATE registros
-        SET hora_salida = ?
-        WHERE profesor_id = ?
-        AND fecha = ?
-        AND hora_salida = 'Pendiente'
-        """, (hora, profesor_id, fecha))
+        SELECT id FROM registros
+        WHERE profesor_id=? AND hora_salida='Pendiente'
+        ORDER BY id DESC LIMIT 1
+        """, (profesor["id"],))
+
+        r = cursor.fetchone()
+
+        if not r:
+            self.registro = "No hay entrada abierta"
+            return
+
+        cursor.execute("""
+        UPDATE registros SET hora_salida=? WHERE id=?
+        """, (fecha, r[0]))
 
         conexion.commit()
+        self.registro = "Salida registrada"
 
-        self.registro = (
-            f"Registro de salida completado\n"
-            f"Profesor: {nombre}\n"
-            f"Fecha: {fecha}\n"
-            f"Hora de salida: {hora}"
-)
-        
+
+# ---------------- ADMIN ----------------
+
+class MenuAdminScreen(Screen):
+
+    def cargar_profesores(self):
+        cursor.execute("SELECT usuario, nombre FROM usuarios")
+        data = cursor.fetchall()
+
+        if not data:
+            self.ids.output.text = "Sin profesores"
+            return
+
+        self.ids.output.text = "\n".join([f"{u} - {n}" for u, n in data])
+
+
+    def cargar_registros(self):
+        cursor.execute("""
+        SELECT profesor_nombre, dia, hora_entrada, hora_salida
+        FROM registros
+        ORDER BY id DESC
+        """)
+        data = cursor.fetchall()
+
+        salida = ""
+
+        for nombre, dia, entrada, salida_sql in data:
+
+            fecha = "N/A"
+            hora_in = "N/A"
+            hora_out = "Pendiente"
+
+            if entrada and " " in entrada:
+                fecha, hora_in = entrada.split(" ")
+
+            if salida_sql and salida_sql != "Pendiente" and " " in salida_sql:
+                hora_out = salida_sql.split(" ")[1]
+
+            salida += (
+                f"{nombre}\n"
+                f"{dia}\n"
+                f"Fecha: {fecha}\n"
+                f"Entrada: {hora_in}\n"
+                f"Salida: {hora_out}\n\n"
+            )
+
+        self.ids.output.text = salida
+
+
+    def agregar_profesor(self):
+        uid = self.ids.new_id.text.strip()
+        nombre = self.ids.new_name.text.strip()
+
+        if uid and nombre:
+            cursor.execute("INSERT OR IGNORE INTO usuarios VALUES (NULL,?,?)", (uid, nombre))
+            conexion.commit()
+
+        self.ids.new_id.text = ""
+        self.ids.new_name.text = ""
 
 
 class WindowManager(ScreenManager):
@@ -146,7 +223,8 @@ class WindowManager(ScreenManager):
 
 
 class MiApp(App):
-    pass
+    def build(self):
+        return Builder.load_file("miapp.kv")
 
 
 if __name__ == "__main__":
