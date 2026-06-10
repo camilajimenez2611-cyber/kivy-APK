@@ -72,32 +72,29 @@ WindowManager:
         Image:
             source: "logo_ujat.png"
             size_hint_y: None
-            height: "90dp"
+            height: "150dp"
             allow_stretch: True
             keep_ratio: True
 
         Label:
-            text: "Control de Asistencia"
-            font_size: "22sp"
-            bold: True
-            color: 1, 1, 1, 1
-            halign: "center"
-            text_size: self.width, None
-            size_hint_y: None
-            height: "36dp"
-
-        Label:
             text: "Universidad Juárez Autónoma de Tabasco"
-            font_size: "13sp"
+            font_size: "20sp"
+            bold: True
             color: 0.55, 0.78, 0.26, 1
             halign: "center"
             text_size: self.width, None
             size_hint_y: None
             height: "24dp"
 
-        Widget:
+        Label:
+            text: "Control de Asistencia"
+            font_size: "26sp"
+            bold: True
+            color: 1, 1, 1, 1
+            halign: "center"
+            text_size: self.width, None
             size_hint_y: None
-            height: "28dp"
+            height: "100dp"
 
         Button:
             text: "Ingresar como Administrador"
@@ -112,15 +109,6 @@ WindowManager:
             on_press: app.root.current = "login"
 
         Widget:
-
-        Label:
-            text: "v2.0 — DAEA"
-            font_size: "12sp"
-            color: 0.55, 0.78, 0.26, 1
-            halign: "center"
-            text_size: self.width, None
-            size_hint_y: None
-            height: "22dp"
 
 
 # ══════════════════════════════════════════════════════════
@@ -155,17 +143,16 @@ WindowManager:
                     size: self.size
 
             Button:
-                text: "← Volver"
+                text: "Volver"
                 background_color: 0, 0, 0, 0
                 color: 0.55, 0.78, 0.26, 1
-                font_size: "14sp"
+                font_size: "18sp"
                 size_hint_x: None
-                width: "110dp"
                 on_press: app.root.current = "inicio"
 
             Label:
                 text: "Acceso Administrador"
-                font_size: "17sp"
+                font_size: "18sp"
                 bold: True
                 color: 1, 1, 1, 1
 
@@ -253,10 +240,10 @@ WindowManager:
                     size: self.size
 
             Button:
-                text: "← Volver"
+                text: "Volver"
                 background_color: 0, 0, 0, 0
                 color: 0.55, 0.78, 0.26, 1
-                font_size: "14sp"
+                font_size: "18sp"
                 size_hint_x: None
                 width: "100dp"
                 on_press: app.root.current = "inicio"
@@ -290,13 +277,12 @@ WindowManager:
 
         TextInput:
             id: id_input
-            hint_text: "Ej. E4C56G789"
             multiline: False
 
         Label:
             id: error_label
             text: ""
-            font_size: "14sp"
+            font_size: "18sp"
             color: 0.66, 0.10, 0.18, 1
             halign: "center"
             text_size: self.width, None
@@ -338,7 +324,7 @@ WindowManager:
         BoxLayout:
             orientation: "vertical"
             size_hint_y: None
-            height: "130dp"
+            height: "100dp"
             padding: [24, 20, 24, 12]
             spacing: 4
 
@@ -378,7 +364,7 @@ WindowManager:
 
         BoxLayout:
             orientation: "vertical"
-            padding: [24, 36, 24, 48]
+            padding: [24, 100, 24, 48]
             spacing: 16
 
             Button:
@@ -392,9 +378,8 @@ WindowManager:
                 background_color: 0.79, 0.66, 0.30, 1
                 color: 0.04, 0.36, 0.18, 1
                 on_press: app.root.current = "login"
-
+            
             Widget:
-
 
 # ══════════════════════════════════════════════════════════
 # REGISTRO DE ASISTENCIA
@@ -437,7 +422,7 @@ WindowManager:
                 height: "44dp"
 
                 Button:
-                    text: "← Menú"
+                    text: "Menú"
                     background_color: 0, 0, 0, 0
                     color: 0.55, 0.78, 0.26, 1
                     font_size: "14sp"
@@ -546,10 +531,10 @@ WindowManager:
                     size: self.width, 5
 
             Button:
-                text: "← Salir"
+                text: "Salir"
                 background_color: 0, 0, 0, 0
                 color: 0.55, 0.78, 0.26, 1
-                font_size: "14sp"
+                font_size: "18sp"
                 size_hint_x: None
                 width: "80dp"
                 size_hint_y: None
@@ -558,7 +543,7 @@ WindowManager:
 
             Label:
                 text: "Panel Administrador"
-                font_size: "17sp"
+                font_size: "18sp"
                 bold: True
                 color: 1, 1, 1, 1
 
@@ -583,7 +568,7 @@ WindowManager:
 
                 TextInput:
                     id: new_id
-                    hint_text: "Clave de empleado (ej. E4C56G789)"
+                    hint_text: "Clave de empleado"
 
                 TextInput:
                     id: new_name
@@ -595,7 +580,7 @@ WindowManager:
                     spacing: 10
 
                     Button:
-                        text: "+ Agregar"
+                        text: "Agregar"
                         background_color: 0.11, 0.52, 0.26, 1
                         color: 1, 1, 1, 1
                         on_press: root.agregar_profesor()
