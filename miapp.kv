@@ -1,7 +1,48 @@
 #:kivy 2.3.1
 
-WindowManager:
+# ══════════════════════════════════════════════════════════
+# PALETA UJAT OFICIAL
+# Verde 1 (principal):   #1C8443  →  0.11, 0.52, 0.26, 1
+# Verde 2 (medio):       #41AD49  →  0.25, 0.68, 0.29, 1
+# Verde 3 (claro):       #8DC642  →  0.55, 0.78, 0.26, 1
+# Verde oscuro:          #0A5C2E  →  0.04, 0.36, 0.18, 1
+# Dorado:                #C9A84C  →  0.79, 0.66, 0.30, 1
+# Rojo:                  #A8192E  →  0.66, 0.10, 0.18, 1
+# Blanco verdoso:        #F2F5F0  →  0.95, 0.96, 0.94, 1
+# ══════════════════════════════════════════════════════════
 
+# ── Estilos globales ──────────────────────────────────────
+<Label>:
+    font_size: "16sp"
+    color: 0.04, 0.36, 0.18, 1
+
+<Button>:
+    font_size: "16sp"
+    size_hint_y: None
+    height: "60dp"
+    bold: True
+    background_normal: ""
+    background_down: ""
+    background_color: 0.11, 0.52, 0.26, 1
+    color: 1, 1, 1, 1
+
+<TextInput>:
+    font_size: "16sp"
+    size_hint_y: None
+    height: "52dp"
+    padding: [14, 12]
+    background_color: 1, 1, 1, 1
+    foreground_color: 0.04, 0.36, 0.18, 1
+    cursor_color: 0.11, 0.52, 0.26, 1
+
+<Spinner>:
+    font_size: "16sp"
+    size_hint_y: None
+    height: "52dp"
+    background_color: 1, 1, 1, 1
+    color: 0.04, 0.36, 0.18, 1
+
+WindowManager:
     InicioScreen:
     LoginAdminScreen:
     LoginScreen:
@@ -10,261 +51,620 @@ WindowManager:
     MenuAdminScreen:
 
 
-# ---------------- INICIO ----------------
+# ══════════════════════════════════════════════════════════
+# INICIO
+# ══════════════════════════════════════════════════════════
 <InicioScreen>:
-
     name: "inicio"
 
     BoxLayout:
         orientation: "vertical"
-        padding: 40
-        spacing: 20
+        padding: [28, 60, 28, 48]
+        spacing: 18
+
         canvas.before:
             Color:
-                rgba: 0.0, 0.39, 0.25, 1
+                rgba: 0.11, 0.52, 0.26, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
 
+        Image:
+            source: "logo_ujat.png"
+            size_hint_y: None
+            height: "90dp"
+            allow_stretch: True
+            keep_ratio: True
+
         Label:
-            text: "CONTROL DE ASISTENCIA UJAT"
-            font_size: "30sp"
-            color: 1,1,1,1
+            text: "Control de Asistencia"
+            font_size: "22sp"
+            bold: True
+            color: 1, 1, 1, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "36dp"
+
+        Label:
+            text: "Universidad Juárez Autónoma de Tabasco"
+            font_size: "13sp"
+            color: 0.55, 0.78, 0.26, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "24dp"
+
+        Widget:
+            size_hint_y: None
+            height: "28dp"
 
         Button:
             text: "Ingresar como Administrador"
-            background_color: 0.78, 0.64, 0.29, 1
-            color: 0,0,0,1
-            on_press:
-                app.root.current = "login_admin"
+            background_color: 0.79, 0.66, 0.30, 1
+            color: 0.04, 0.36, 0.18, 1
+            on_press: app.root.current = "login_admin"
 
         Button:
             text: "Ingresar como Profesor"
-            background_color: 1,1,1,1
-            color: 0.0, 0.25, 0.16, 1
-            on_press:
-                app.root.current = "login"
-# ---------------- LOGIN ADMIN ----------------
-<LoginAdminScreen>:
+            background_color: 1, 1, 1, 1
+            color: 0.11, 0.52, 0.26, 1
+            on_press: app.root.current = "login"
 
+        Widget:
+
+        Label:
+            text: "v2.0 — DAEA"
+            font_size: "12sp"
+            color: 0.55, 0.78, 0.26, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "22dp"
+
+
+# ══════════════════════════════════════════════════════════
+# LOGIN ADMINISTRADOR
+# ══════════════════════════════════════════════════════════
+<LoginAdminScreen>:
     name: "login_admin"
 
     BoxLayout:
         orientation: "vertical"
-        padding: 40
+        padding: [28, 0, 28, 48]
+        spacing: 14
 
         canvas.before:
             Color:
-                rgba: 0.0, 0.39, 0.25, 1
+                rgba: 0.95, 0.96, 0.94, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
 
+        # Barra superior verde
+        BoxLayout:
+            size_hint_y: None
+            height: "60dp"
+            padding: [0, 8]
+
+            canvas.before:
+                Color:
+                    rgba: 0.11, 0.52, 0.26, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "← Volver"
+                background_color: 0, 0, 0, 0
+                color: 0.55, 0.78, 0.26, 1
+                font_size: "14sp"
+                size_hint_x: None
+                width: "110dp"
+                on_press: app.root.current = "inicio"
+
+            Label:
+                text: "Acceso Administrador"
+                font_size: "17sp"
+                bold: True
+                color: 1, 1, 1, 1
+
+        Widget:
+
+        Label:
+            text: "ADMINISTRADOR"
+            font_size: "18sp"
+            bold: True
+            color: 0.11, 0.52, 0.26, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "72dp"
+
+        Label:
+            text: "Ingresa tu ID de administrador"
+            font_size: "15sp"
+            color: 0.04, 0.36, 0.18, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "28dp"
+
         TextInput:
             id: admin_input
-            hint_text: "ID Admin"
-            background_color: 1,1,1,1
+            hint_text: "ID de administrador"
+            multiline: False
+            password: True
+
+        Label:
+            id: error_label
+            text: ""
+            font_size: "14sp"
+            color: 0.66, 0.10, 0.18, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "28dp"
 
         Button:
-            text: "Entrar"
-            background_color: 0.78, 0.64, 0.29, 1
-            on_press:
-                root.validar_admin()
+            text: "ENTRAR"
+            background_color: 0.11, 0.52, 0.26, 1
+            color: 1, 1, 1, 1
+            on_press: root.validar_admin()
+
+        Button:
+            text: "Cancelar"
+            background_color: 0.95, 0.96, 0.94, 1
+            color: 0.04, 0.36, 0.18, 1
+            on_press: app.root.current = "inicio"
+
+        Widget:
 
 
-# ---------------- LOGIN PROFESOR ----------------
+# ══════════════════════════════════════════════════════════
+# LOGIN PROFESOR
+# ══════════════════════════════════════════════════════════
 <LoginScreen>:
-
     name: "login"
 
     BoxLayout:
         orientation: "vertical"
-        padding: 40
-        spacing: 20
+        padding: [28, 0, 28, 48]
+        spacing: 14
 
         canvas.before:
             Color:
-                rgba: 0.95,0.95,0.95,1
+                rgba: 0.95, 0.96, 0.94, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
 
+        # Barra superior verde
+        BoxLayout:
+            size_hint_y: None
+            height: "60dp"
+            padding: [0, 8]
+
+            canvas.before:
+                Color:
+                    rgba: 0.11, 0.52, 0.26, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "← Volver"
+                background_color: 0, 0, 0, 0
+                color: 0.55, 0.78, 0.26, 1
+                font_size: "14sp"
+                size_hint_x: None
+                width: "100dp"
+                on_press: app.root.current = "inicio"
+
+            Label:
+                text: "Acceso Profesor"
+                font_size: "17sp"
+                bold: True
+                color: 1, 1, 1, 1
+
+        Widget:
+
         Label:
-            text: "INGRESA TU ID"
-            font_size: "26sp"
-            color: 0.0, 0.39, 0.25, 1
+            text: "PROFESOR"
+            font_size: "18sp"
+            bold: True
+            color: 0.11, 0.52, 0.26, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "72dp"
+
+        Label:
+            text: "Ingresa tu clave de empleado"
+            font_size: "15sp"
+            color: 0.04, 0.36, 0.18, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "28dp"
 
         TextInput:
             id: id_input
+            hint_text: "Ej. E4C56G789"
             multiline: False
-            background_color: 1,1,1,1
+
+        Label:
+            id: error_label
+            text: ""
+            font_size: "14sp"
+            color: 0.66, 0.10, 0.18, 1
+            halign: "center"
+            text_size: self.width, None
+            size_hint_y: None
+            height: "28dp"
 
         Button:
             text: "INGRESAR"
-            background_color: 0.0, 0.39, 0.25, 1
-            color: 1,1,1,1
-            on_press:
-                root.validar_usuario()
+            background_color: 0.11, 0.52, 0.26, 1
+            color: 1, 1, 1, 1
+            on_press: root.validar_usuario()
 
-# ---------------- MENU PROFESOR ----------------
+        Button:
+            text: "Cancelar"
+            background_color: 0.95, 0.96, 0.94, 1
+            color: 0.04, 0.36, 0.18, 1
+            on_press: app.root.current = "inicio"
+
+        Widget:
+
+
+# ══════════════════════════════════════════════════════════
+# MENÚ PROFESOR
+# ══════════════════════════════════════════════════════════
 <MenuScreen>:
-
     name: "menu"
 
     BoxLayout:
         orientation: "vertical"
-        padding: 40
-        spacing: 20
+
         canvas.before:
             Color:
-                rgba: 1,1,1,1
+                rgba: 0.95, 0.96, 0.94, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
 
-        Label:
-            text: "MENÚ UJAT"
-            font_size: "36sp"
-            color: 0.0, 0.39, 0.25, 1
-
-        Button:
-            text: "Registrar Horario"
-            background_color: 0.0, 0.39, 0.25, 1
-            color: 1,1,1,1
-            on_press:
-                app.root.current = "registro"
-
-        Button:
-            text: "Cerrar Sesión"
-            background_color: 0.78, 0.64, 0.29, 1
-            color: 0,0,0,1
-            on_press:
-                app.root.current = "login"
-
-
-# ---------------- REGISTRO ----------------
-<RegistroScreen>:
-    name: "registro"
-
-    FloatLayout:
-
-        canvas.before:
-            Rectangle:
-                source: "logo_ujat.png"
-                pos: self.pos
-                size: self.size
-
+        # Header verde con franja dorada
         BoxLayout:
             orientation: "vertical"
-            padding: 40
-            spacing: 20
-            size_hint: 0.85, 0.85
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            size_hint_y: None
+            height: "130dp"
+            padding: [24, 20, 24, 12]
+            spacing: 4
 
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 0.92
-                RoundedRectangle:
+                    rgba: 0.11, 0.52, 0.26, 1
+                Rectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [15]
+                # Franja dorada inferior
+                Color:
+                    rgba: 0.79, 0.66, 0.30, 1
+                Rectangle:
+                    pos: self.x, self.y
+                    size: self.width, 5
 
             Label:
-                text: "REGISTRO DE ASISTENCIA"
-                font_size: "28sp"
+                id: bienvenido_label
+                text: "Bienvenido"
+                font_size: "21sp"
                 bold: True
-                color: 0.0, 0.25, 0.16, 1
-                size_hint_y: None
-                height: 60
-
-            Spinner:
-                id: dia_spinner
-                text: "Selecciona un día"
-                values: ["Lunes","Martes","Miércoles","Jueves","Viernes"]
-                size_hint_y: None
-                height: 50
-
-            Button:
-                text: "REGISTRAR ENTRADA"
-                size_hint_y: None
-                height: 55
-                background_color: 0.0, 0.25, 0.16, 1
-                color: 1,1,1,1
-                on_press:
-                    root.registrar_entrada()
-
-            Button:
-                text: "REGISTRAR SALIDA"
-                size_hint_y: None
-                height: 55
-                background_color: 0.78, 0.64, 0.29, 1
-                color: 0,0,0,1
-                on_press:
-                    root.registrar_salida()
-
-            Label:
-                text: root.registro
-                color: 0,0,0,1
+                color: 1, 1, 1, 1
+                halign: "left"
                 text_size: self.width, None
                 size_hint_y: None
-                height: self.texture_size[1] + 20
+                height: "34dp"
+
+            Label:
+                id: id_label
+                text: ""
+                font_size: "14sp"
+                color: 0.55, 0.78, 0.26, 1
+                halign: "left"
+                text_size: self.width, None
+                size_hint_y: None
+                height: "22dp"
+
+        BoxLayout:
+            orientation: "vertical"
+            padding: [24, 36, 24, 48]
+            spacing: 16
 
             Button:
-                text: "VOLVER AL MENÚ"
+                text: "Registrar Asistencia"
+                background_color: 0.11, 0.52, 0.26, 1
+                color: 1, 1, 1, 1
+                on_press: app.root.current = "registro"
+
+            Button:
+                text: "Cerrar Sesión"
+                background_color: 0.79, 0.66, 0.30, 1
+                color: 0.04, 0.36, 0.18, 1
+                on_press: app.root.current = "login"
+
+            Widget:
+
+
+# ══════════════════════════════════════════════════════════
+# REGISTRO DE ASISTENCIA
+# ══════════════════════════════════════════════════════════
+<RegistroScreen>:
+    name: "registro"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.96, 0.94, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Header
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: "110dp"
+            padding: [20, 12, 20, 8]
+            spacing: 4
+
+            canvas.before:
+                Color:
+                    rgba: 0.11, 0.52, 0.26, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: 0.79, 0.66, 0.30, 1
+                Rectangle:
+                    pos: self.x, self.y
+                    size: self.width, 5
+
+            BoxLayout:
                 size_hint_y: None
-                height: 55
-                background_color: 0.2, 0.2, 0.2, 1
-                color: 1,1,1,1
-                on_press:
-                    app.root.current = "menu"
+                height: "44dp"
+
+                Button:
+                    text: "← Menú"
+                    background_color: 0, 0, 0, 0
+                    color: 0.55, 0.78, 0.26, 1
+                    font_size: "14sp"
+                    size_hint_x: None
+                    width: "90dp"
+                    size_hint_y: None
+                    height: "44dp"
+                    on_press: app.root.current = "menu"
+
+                Label:
+                    text: "Registrar Asistencia"
+                    font_size: "17sp"
+                    bold: True
+                    color: 1, 1, 1, 1
+
+            Label:
+                id: profesor_label
+                text: ""
+                font_size: "13sp"
+                color: 0.55, 0.78, 0.26, 1
+                halign: "left"
+                text_size: self.width, None
+                size_hint_y: None
+                height: "24dp"
+
+        ScrollView:
+            BoxLayout:
+                orientation: "vertical"
+                padding: [24, 24, 24, 40]
+                spacing: 14
+                size_hint_y: None
+                height: self.minimum_height
+
+                Label:
+                    text: "Día de clase"
+                    font_size: "15sp"
+                    color: 0.04, 0.36, 0.18, 1
+                    halign: "left"
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: "26dp"
+
+                Spinner:
+                    id: dia_spinner
+                    text: "Selecciona un día"
+                    values: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+
+                Widget:
+                    size_hint_y: None
+                    height: "6dp"
+
+                Button:
+                    text: "REGISTRAR ENTRADA"
+                    background_color: 0.11, 0.52, 0.26, 1
+                    color: 1, 1, 1, 1
+                    on_press: root.registrar_entrada()
+
+                Button:
+                    text: "REGISTRAR SALIDA"
+                    background_color: 0.66, 0.10, 0.18, 1
+                    color: 1, 1, 1, 1
+                    on_press: root.registrar_salida()
+
+                Label:
+                    text: root.registro
+                    font_size: "15sp"
+                    color: 0.04, 0.36, 0.18, 1
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: self.texture_size[1] + 16
+                    halign: "center"
 
 
-# ---------------- MENU ADMIN ----------------
+# ══════════════════════════════════════════════════════════
+# PANEL ADMINISTRADOR
+# ══════════════════════════════════════════════════════════
 <MenuAdminScreen>:
-
     name: "menu_admin"
 
     BoxLayout:
         orientation: "vertical"
-        spacing: 10
-        padding: 20
 
-        Label:
-            text: "PANEL ADMIN"
-            font_size: "22sp"
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.96, 0.94, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
-        TextInput:
-            id: new_id
-            hint_text: "ID profesor"
+        # Header
+        BoxLayout:
+            size_hint_y: None
+            height: "64dp"
+            padding: [16, 10]
 
-        TextInput:
-            id: new_name
-            hint_text: "Nombre profesor"
+            canvas.before:
+                Color:
+                    rgba: 0.11, 0.52, 0.26, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: 0.79, 0.66, 0.30, 1
+                Rectangle:
+                    pos: self.x, self.y
+                    size: self.width, 5
 
-        Button:
-            text: "Agregar profesor"
-            on_press: root.agregar_profesor()
+            Button:
+                text: "← Salir"
+                background_color: 0, 0, 0, 0
+                color: 0.55, 0.78, 0.26, 1
+                font_size: "14sp"
+                size_hint_x: None
+                width: "80dp"
+                size_hint_y: None
+                height: "44dp"
+                on_press: app.root.current = "inicio"
 
-        Button:
-            text: "Ver profesores"
-            on_press: root.cargar_profesores()
-
-        Label:
-            id: output_profesores
-            text: ""
-
-        Button:
-            text: "Ver registros"
-            on_press: root.cargar_registros()
+            Label:
+                text: "Panel Administrador"
+                font_size: "17sp"
+                bold: True
+                color: 1, 1, 1, 1
 
         ScrollView:
-            Label:
-                id: output
-                text: ""
+            BoxLayout:
+                orientation: "vertical"
+                padding: [20, 20, 20, 40]
+                spacing: 12
                 size_hint_y: None
-                height: self.texture_size[1]
-                text_size: self.width, None
+                height: self.minimum_height
 
-        Button:
-            text: "Cerrar sesión"
-            on_press: app.root.current = "inicio"
+                # ── Sección: Agregar profesor ──
+                Label:
+                    text: "Agregar / Eliminar Profesor"
+                    font_size: "15sp"
+                    bold: True
+                    color: 0.04, 0.36, 0.18, 1
+                    halign: "left"
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: "30dp"
+
+                TextInput:
+                    id: new_id
+                    hint_text: "Clave de empleado (ej. E4C56G789)"
+
+                TextInput:
+                    id: new_name
+                    hint_text: "Nombre completo"
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: "60dp"
+                    spacing: 10
+
+                    Button:
+                        text: "+ Agregar"
+                        background_color: 0.11, 0.52, 0.26, 1
+                        color: 1, 1, 1, 1
+                        on_press: root.agregar_profesor()
+
+                    Button:
+                        text: "Eliminar"
+                        background_color: 0.66, 0.10, 0.18, 1
+                        color: 1, 1, 1, 1
+                        on_press: root.eliminar_profesor()
+
+                Label:
+                    id: admin_msg
+                    text: ""
+                    font_size: "14sp"
+                    color: 0.04, 0.36, 0.18, 1
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: self.texture_size[1] + 8
+                    halign: "center"
+
+                # Divisor dorado
+                BoxLayout:
+                    size_hint_y: None
+                    height: "3dp"
+                    canvas.before:
+                        Color:
+                            rgba: 0.79, 0.66, 0.30, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                Widget:
+                    size_hint_y: None
+                    height: "4dp"
+
+                # ── Sección: Consultas ──
+                Label:
+                    text: "Consultas"
+                    font_size: "15sp"
+                    bold: True
+                    color: 0.04, 0.36, 0.18, 1
+                    halign: "left"
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: "30dp"
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: "60dp"
+                    spacing: 10
+
+                    Button:
+                        text: "Ver Profesores"
+                        background_color: 0.79, 0.66, 0.30, 1
+                        color: 0.04, 0.36, 0.18, 1
+                        on_press: root.cargar_profesores()
+
+                    Button:
+                        text: "Ver Registros"
+                        background_color: 0.79, 0.66, 0.30, 1
+                        color: 0.04, 0.36, 0.18, 1
+                        on_press: root.cargar_registros()
+
+                Label:
+                    id: output
+                    text: "Los resultados aparecerán aquí."
+                    font_size: "14sp"
+                    color: 0.04, 0.36, 0.18, 1
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: self.texture_size[1] + 20
+                    halign: "left"
