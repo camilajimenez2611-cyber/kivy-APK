@@ -139,12 +139,12 @@ class RegistroScreen(Screen):
     def registrar_entrada(self):
         profesor = self.get_profesor()
         if not profesor:
-            self.registro = "⚠ Sin sesión activa"
+            self.registro = "Sin sesión activa"
             return
 
         dia = self.ids.dia_spinner.text
         if dia == "Selecciona un día":
-            self.registro = "⚠ Elige el día primero"
+            self.registro = "Elige el día primero"
             return
 
         ahora = datetime.now()
@@ -161,7 +161,7 @@ class RegistroScreen(Screen):
 
         if existe:
             conn.close()
-            self.registro = f"⚠ Ya tienes entrada abierta el {dia}"
+            self.registro = f"Ya tienes entrada abierta el {dia}"
             return
 
         c.execute("""
@@ -169,12 +169,12 @@ class RegistroScreen(Screen):
         """, (profesor["id"], profesor["nombre"], dia, fecha_hora, "Pendiente"))
         conn.commit()
         conn.close()
-        self.registro = f"✓ Entrada registrada — {dia} {hora_str}"
+        self.registro = f"Entrada registrada — {dia} {hora_str}"
 
     def registrar_salida(self):
         profesor = self.get_profesor()
         if not profesor:
-            self.registro = "⚠ Sin sesión activa"
+            self.registro = "Sin sesión activa"
             return
 
         ahora = datetime.now()
@@ -192,13 +192,13 @@ class RegistroScreen(Screen):
 
         if not r:
             conn.close()
-            self.registro = "⚠ No hay entrada abierta"
+            self.registro = "No hay entrada abierta"
             return
 
         c.execute("UPDATE registros SET hora_salida=? WHERE id=?", (fecha_hora, r[0]))
         conn.commit()
         conn.close()
-        self.registro = f"✓ Salida registrada — {r[1]} {hora_str}"
+        self.registro = f"Salida registrada — {r[1]} {hora_str}"
 
 
 # ---------------- ADMIN ----------------
@@ -236,7 +236,7 @@ class MenuAdminScreen(Screen):
         for nombre, dia, entrada, salida_sql in data:
             fecha = "N/A"
             hora_in = "N/A"
-            hora_out = "Pendiente ⏳"
+            hora_out = "Pendiente"
 
             if entrada and " " in entrada:
                 fecha_raw, hora_raw = entrada.split(" ", 1)
@@ -255,11 +255,11 @@ class MenuAdminScreen(Screen):
                     pass
 
             lineas.append(
-                f"──────────────────\n"
-                f"👤 {nombre}\n"
-                f"📅 {dia}  —  {fecha}\n"
-                f"🟢 Entrada: {hora_in}\n"
-                f"🔴 Salida:  {hora_out}\n"
+                f"______________________\n"
+                f"{nombre}\n"
+                f"{dia}  —  {fecha}\n"
+                f"Entrada: {hora_in}\n"
+                f"Salida:  {hora_out}\n"
             )
 
         self.ids.output.text = "\n".join(lineas)
@@ -270,7 +270,7 @@ class MenuAdminScreen(Screen):
         self.ids.admin_msg.text = ""
 
         if not uid or not nombre:
-            self.ids.admin_msg.text = "⚠ Completa ID y nombre"
+            self.ids.admin_msg.text = "Completa ID y nombre"
             return
 
         conn = get_connection()
@@ -278,7 +278,7 @@ class MenuAdminScreen(Screen):
         try:
             c.execute("INSERT OR IGNORE INTO usuarios VALUES (NULL,?,?)", (uid, nombre))
             conn.commit()
-            self.ids.admin_msg.text = f"✓ Profesor '{nombre}' agregado"
+            self.ids.admin_msg.text = f"Profesor '{nombre}' agregado"
         except Exception as e:
             self.ids.admin_msg.text = f"Error: {e}"
         finally:
@@ -290,7 +290,7 @@ class MenuAdminScreen(Screen):
     def eliminar_profesor(self):
         uid = self.ids.new_id.text.strip().upper()
         if not uid:
-            self.ids.admin_msg.text = "⚠ Ingresa el ID a eliminar"
+            self.ids.admin_msg.text = "Ingresa el ID a eliminar"
             return
 
         conn = get_connection()
@@ -301,9 +301,9 @@ class MenuAdminScreen(Screen):
         conn.close()
 
         if cambios:
-            self.ids.admin_msg.text = f"✓ Profesor {uid} eliminado"
+            self.ids.admin_msg.text = f"Profesor {uid} eliminado"
         else:
-            self.ids.admin_msg.text = f"⚠ No se encontró el ID {uid}"
+            self.ids.admin_msg.text = f"No se encontró el ID {uid}"
 
         self.ids.new_id.text = ""
 
